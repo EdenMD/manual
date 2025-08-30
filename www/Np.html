@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gen1: New Project</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&family=Orbitron:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles/main.css">
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+ 
+</head>
+<body>
+  <div class="header">
+    <button class="back-button" id="backButton" title="Go Back"><i class="fas fa-arrow-left"></i></button>
+    <h1>New Project</h1>
+    <div class="theme-switch" id="themeSwitch">
+      <i class="fas fa-desktop" id="lightIcon"></i>
+      <i class="fas fa-moon" id="moonIcon" style="display: none;"></i>
+      <span id="themeText">Light Mode</span>
+    </div>
+  </div>
+
+  <div class="container">
+    <h2 class="section-title">Initiate New Project</h2>
+
+    <div class="form-group">
+      <label for="projectName">Project Name:</label>
+      <input type="text" id="projectName" placeholder="e.g., My Awesome App" required>
+    </div>
+
+    <div class="form-group">
+      <label for="githubRepoUrl">Import from GitHub Repository:</label>
+      <div class="github-import-group">
+        <input type="text" id="githubRepoUrl" placeholder="e.g., https://github.com/user/repo-name">
+        <button class="action-button" id="importGithubBtn" style="margin-top: 0;">Import</button>
+      </div>
+      <p style="font-size: 0.85em; color: var(--text-secondary); margin-top: 5px;">Enter a public GitHub repository URL to import its files.</p>
+    </div>
+
+    <div class="form-group">
+      <label>Project Files:</label>
+      <div class="file-upload-area" id="fileUploadArea">
+        <input type="file" id="fileInput" multiple accept=".zip, text/html, text/css, application/javascript, image/, ".json, .txt, .md, audio/, video/*">
+        <i class="fas fa-cloud-upload-alt"></i>
+        <p>Drag & Drop files here, or Click to Browse</p>
+        <p>(.zip, .html, .css, .js, .json, images, audio, video etc.)</p>
+      </div>
+      <ul class="file-list hidden" id="fileList"></ul>
+    </div>
+
+    <button class="action-button" id="createProjectBtn">Create Project</button>
+
+    <div class="message-area" id="statusMessage" style="display: none;">
+      <i class="fas fa-info-circle"></i>
+      <p>Status updates will appear here.</p>
+    </div>
+  </div>
+
+  <script src="scripts/main.js"></script>
+</body>
+</html>

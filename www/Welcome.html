@@ -1,0 +1,975 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gen1: Welcome - IndexedDB Powered</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&family=Orbitron:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --background-light: #F0F2F5;
+            --surface-light: #FFFFFF;
+            --card-light: #F8F9FA;
+            --text-dark: #333333;
+            --text-muted: #666666;
+            --accent-blue-light: #007BFF;
+            --accent-purple-light: #6F42C1;
+            --border-color-light: #D1D9E6;
+            --button-gradient-start-light: #007BFF;
+            --button-gradient-end-light: #6F42C1;
+            --shadow-color-light: rgba(0, 0, 0, 0.1);
+
+            --background: var(--background-light);
+            --surface: var(--surface-light);
+            --card: var(--card-light);
+            --text-primary: var(--text-dark);
+            --text-secondary: var(--text-muted);
+            --accent-main: var(--accent-blue-light);
+            --accent-secondary: var(--accent-purple-light);
+            --border: var(--border-color-light);
+            --button-start: var(--button-gradient-start-light);
+            --button-end: var(--button-gradient-end-light);
+            --shadow: var(--shadow-color-light);
+            --delete-button-bg: #DC3545;
+            --delete-button-hover-bg: #C82333;
+            --disabled-bg: #E0E0E0;
+            --disabled-text: #A0A0A0;
+            --error-color: #DC3545;
+            --info-color: #28A745;
+        }
+
+        body.dark-theme {
+            --background: #121212;
+            --surface: #1F1F1F;
+            --card: #2C2C2C;
+            --text-primary: #E0E0E0;
+            --text-secondary: #A0A0A0;
+            --accent-main: #00BFFF;
+            --accent-secondary: #8A2BE2;
+            --border: #3A3A3A;
+            --button-start: #00BFFF;
+            --button-end: #8A2BE2;
+            --shadow: rgba(0, 0, 0, 0.4);
+
+            --delete-button-bg: #FF416C;
+            --delete-button-hover-bg: #D82255;
+            --disabled-bg: #404040;
+            --disabled-text: #707070;
+            --error-color: #FF416C;
+            --info-color: #39FF14;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--background);
+            color: var(--text-primary);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            overflow-y: auto;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            transition: background-color 0.4s ease, color 0.4s ease;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--accent-main);
+            margin: 0;
+            font-weight: 600;
+        }
+
+        .header {
+            width: 100%;
+            max-width: 900px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 30px 20px;
+            box-sizing: border-box;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2.2em;
+            text-shadow: none;
+        }
+
+        .theme-switch {
+            background-color: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 50px;
+            padding: 8px 15px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px var(--shadow);
+        }
+
+        .theme-switch:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px var(--shadow);
+        }
+
+        .theme-switch i {
+            font-size: 1.2em;
+            color: var(--text-primary);
+        }
+
+        .theme-switch span {
+            font-size: 0.9em;
+            font-weight: 600;
+            user-select: none;
+            color: var(--text-primary);
+        }
+
+        .settings-btn {
+            background-color: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px var(--shadow);
+            color: var(--text-primary);
+            font-size: 1.4em;
+            padding: 0;
+            flex-shrink: 0;
+        }
+
+        .settings-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px var(--shadow);
+            background-color: var(--accent-main);
+            color: white;
+        }
+
+        .container {
+            background-color: var(--surface);
+            box-shadow: 0 4px 15px var(--shadow);
+            border-radius: 8px;
+            margin: 20px 10px 40px 10px;
+            padding: 30px;
+            box-sizing: border-box;
+            width: 100%;
+            max-width: 900px;
+            border: 1px solid var(--border);
+            transition: background-color 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
+        }
+
+        .section-title {
+            font-size: 1.8em;
+            font-weight: 700;
+            margin-bottom: 25px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border);
+            text-align: center;
+            color: var(--accent-main);
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .project-card {
+            background-color: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+            cursor: pointer;
+            box-shadow: 0 2px 8px var(--shadow);
+        }
+
+        .project-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 5px 12px var(--shadow);
+        }
+
+        .project-card h3 {
+            margin-bottom: 15px;
+            font-size: 1.3em;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .project-card p {
+            font-size: 0.9em;
+            color: var(--text-secondary);
+            margin-bottom: 15px;
+        }
+
+        .project-stats {
+            margin-top: 10px;
+            margin-bottom: 15px;
+            font-size: 0.85em;
+            color: var(--text-secondary);
+        }
+
+        .project-stats .stat-label {
+            font-weight: 600;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .open-count-bar-container {
+            width: 100%;
+            background-color: var(--border);
+            border-radius: 3px;
+            height: 6px;
+            overflow: hidden;
+            margin-top: 5px;
+        }
+
+        .open-count-bar {
+            height: 100%;
+            background-color: var(--accent-secondary);
+            width: 0%;
+            transition: width 0.5s ease-out;
+            border-radius: 3px;
+        }
+
+        .project-card .card-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 15px;
+        }
+
+        .project-card button {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9em;
+            transition: all 0.2s ease;
+            color: white;
+            box-shadow: 0 2px 5px var(--shadow);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .project-card .open-btn {
+            background-image: linear-gradient(to right, var(--button-start), var(--button-end));
+        }
+
+        .project-card .open-btn:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+
+        .project-card .delete-btn {
+            background-color: var(--delete-button-bg);
+            background-image: none;
+        }
+
+        .project-card .delete-btn:hover {
+            background-color: var(--delete-button-hover-bg);
+            transform: translateY(-1px);
+        }
+
+        #createNewProjectBtn {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-image: linear-gradient(to right, var(--button-start), var(--button-end));
+            color: white;
+            font-size: 2em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 5px 15px var(--shadow);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 1000;
+            border: none;
+            outline: none;
+        }
+
+        #createNewProjectBtn:hover:not(:disabled) {
+            transform: scale(1.05);
+            box-shadow: 0 8px 20px var(--shadow);
+        }
+
+        #createNewProjectBtn:disabled {
+            background-color: var(--disabled-bg);
+            background-image: none;
+            color: var(--disabled-text);
+            cursor: not-allowed;
+            opacity: 0.7;
+            transform: none;
+            box-shadow: 0 2px 8px var(--shadow);
+        }
+
+        .export-btn {
+            background-image: linear-gradient(to right, var(--button-start), var(--button-end));
+            color: white;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9em;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 5px var(--shadow);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .export-btn:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+
+        .export-btn i {
+            font-size: 1em;
+        }
+
+        .message-area {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            font-weight: 600;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 0 2px 8px var(--shadow);
+            background-color: var(--card);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            display: none;
+        }
+        .message-area.success {
+            color: var(--info-color);
+            border: 1px solid var(--info-color);
+        }
+        .message-area.error {
+            color: var(--error-color);
+            border: 1px solid var(--error-color);
+        }
+        .message-area i {
+            font-size: 1.2em;
+        }
+        .message-area p {
+            margin: 0;
+            padding: 0;
+        }
+
+        /* User Profile Widget Styles */
+        .user-profile-widget {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background-color: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 50px; /* Pill shape */
+            padding: 8px 20px;
+            box-shadow: 0 2px 8px var(--shadow);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .user-profile-widget:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px var(--shadow);
+        }
+
+        .user-profile-widget .profile-pic {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--accent-main);
+            flex-shrink: 0;
+        }
+
+        .user-profile-widget .user-info {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            color: var(--text-primary);
+        }
+
+        .user-profile-widget .user-info p {
+            margin: 0;
+            font-size: 0.9em;
+            font-weight: 600;
+            line-height: 1.2;
+        }
+
+        .user-profile-widget .user-info span {
+            font-size: 0.75em;
+            color: var(--text-secondary);
+        }
+
+        .user-profile-widget .logout-btn {
+            background: none;
+            border: none;
+            color: var(--delete-button-bg);
+            cursor: pointer;
+            font-size: 1.1em;
+            padding: 0;
+            margin-left: 10px; /* Space from email */
+            transition: color 0.2s ease;
+        }
+
+        .user-profile-widget .logout-btn:hover {
+            color: var(--delete-button-hover-bg);
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                gap: 20px;
+                padding: 25px 15px;
+            }
+            .header h1 {
+                font-size: 1.8em;
+                text-align: center;
+            }
+            .header > div {
+                flex-direction: column;
+                align-items: center;
+                gap: 10px;
+            }
+            .theme-switch {
+                position: static;
+                margin-top: 0;
+            }
+            .settings-btn {
+                margin-top: 10px;
+                width: 40px;
+                height: 40px;
+                font-size: 1.2em;
+            }
+            .container {
+                padding: 25px 20px;
+                margin: 15px 10px;
+            }
+            .projects-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            #createNewProjectBtn {
+                top: auto;
+                bottom: 20px;
+                right: 20px;
+                width: 55px;
+                height: 55px;
+                font-size: 1.8em;
+            }
+            .section-title {
+                font-size: 1.5em;
+            }
+            .message-area {
+                padding: 12px;
+                font-size: 0.9em;
+            }
+
+            .user-profile-widget {
+                width: calc(100% - 40px); /* Adjust width for mobile padding */
+                justify-content: center;
+                order: -1; /* Place at top in flex container */
+                margin-bottom: 15px;
+            }
+
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="user-profile-widget" id="userProfileWidget">
+            <img  class="profile-pic" src="defluat-profile.png" alt="User Profile Pic">
+            <div class="user-info">
+                <p id="userNameDisplay">Loading...</p>
+                <span id="userEmailDisplay"></span>
+            </div>
+            <button class="logout-btn" id="logoutBtn" title="Logout"><i class="fas fa-sign-out-alt"></i></button>
+        </div>
+        <h1>Gen1: Xbuilder</h1>
+        <div style="display: flex; gap: 15px; align-items: center;">
+            <div class="theme-switch" id="themeSwitch">
+                <i class="fas fa-desktop" id="lightIcon"></i>
+                <i class="fas fa-moon" id="moonIcon" style="display: none;"></i>
+                <span id="themeText">Light Mode</span>
+            </div>
+            <button class="settings-btn" id="settingsBtn" title="Settings">
+                <i class="fas fa-cog"></i>
+            </button>
+        </div>
+    </div>
+
+    <div class="container">
+        <h2 class="section-title">Your Projects</h2>
+        <div class="projects-grid" id="projectsGrid">
+            <p style="text-align: center; color: var(--text-secondary); padding: 30px; font-weight: 400;">
+                Loading projects...
+            </p>
+        </div>
+
+        <div class="message-area" id="statusMessage">
+            <i class="fas fa-info-circle"></i> <p>Status messages will appear here.</p>
+        </div>
+    </div>
+
+    <button id="createNewProjectBtn" title="Create New Project">
+        <i class="fas fa-plus"></i>
+    </button>
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+
+    <!-- Firebase SDKs -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
+
+        // Your web app's Firebase configuration (same as login.html)
+        const firebaseConfig = {
+            apiKey: "AIzaSyCxd1eEj4mET0tzasD12lNfno054f6ZN-0",
+            authDomain: "xbuilder-64c36.firebaseapp.com",
+            projectId: "xbuilder-64c36",
+            storageBucket: "xbuilder-64c36.firebasestorage.app",
+            messagingSenderId: "652300372081",
+            appId: "1:652300372081:web:df1f6f8ea8b537e19133d0"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        // Default profile picture URL (you should put a default image file here)
+        const DEFAULT_PROFILE_PIC_URL = 'default-profile.png'; 
+
+        // Elements for profile widget
+        const userProfilePic = document.getElementById('userProfilePic');
+        const userNameDisplay = document.getElementById('userNameDisplay');
+        const userEmailDisplay = document.getElementById('userEmailDisplay');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const userProfileWidget = document.getElementById('userProfileWidget');
+
+        // Handle user authentication state
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                // User is signed in
+                userNameDisplay.textContent = user.displayName || 'User'; // Use display name or generic 'User'
+                userEmailDisplay.textContent = user.email;
+                // Set profile picture, fallback to default if not available
+                userProfilePic.src = user.photoURL || DEFAULT_PROFILE_PIC_URL;
+                // Add onerror handler to revert to default if the loaded photoURL is broken
+                userProfilePic.onerror = () => {
+                    userProfilePic.src = DEFAULT_PROFILE_PIC_URL;
+                };
+
+                // Show the widget
+                userProfileWidget.style.display = 'flex'; 
+            } else {
+                // User is signed out, redirect to login page
+                console.log('No user signed in. Redirecting to login.html');
+                window.location.href = 'login.html';
+            }
+        });
+
+        // Handle logout
+        logoutBtn.addEventListener('click', async () => {
+            try {
+                await signOut(auth);
+                console.log('User signed out.');
+                // Redirection is handled by onAuthStateChanged listener
+            } catch (error) {
+                console.error('Error signing out:', error.message);
+                // Optionally show an error message on the page
+            }
+        });
+
+
+        const DB_NAME = 'Gen1DB';
+        const DB_VERSION = 1;
+        const PROJECTS_STORE_NAME = 'projects';
+        const FILES_STORE_NAME = 'projectFiles';
+        const CURRENT_PROJECT_ID_LS_KEY = 'gen1_current_project_id';
+        const THEME_STORAGE_KEY = 'gen1_theme';
+        const PROJECT_SORT_KEY = 'gen1_project_sort_order'; // New constant for sort order
+
+        const body = document.body;
+        const themeSwitch = document.getElementById('themeSwitch');
+        const lightIcon = document.getElementById('lightIcon');
+        const moonIcon = document.getElementById('moonIcon');
+        const themeText = document.getElementById('themeText');
+        const projectsGrid = document.getElementById('projectsGrid');
+        const createNewProjectBtn = document.getElementById('createNewProjectBtn');
+        const statusMessage = document.getElementById('statusMessage');
+        const settingsBtn = document.getElementById('settingsBtn');
+
+        let db;
+
+        function openGen1DB() {
+            return new Promise((resolve, reject) => {
+                const request = indexedDB.open(DB_NAME, DB_VERSION);
+
+                request.onupgradeneeded = (event) => {
+                    db = event.target.result;
+                    if (!db.objectStoreNames.contains(PROJECTS_STORE_NAME)) {
+                        db.createObjectStore(PROJECTS_STORE_NAME, { keyPath: 'id' });
+                    }
+                    if (!db.objectStoreNames.contains(FILES_STORE_NAME)) {
+                        db.createObjectStore(FILES_STORE_NAME, { keyPath: 'projectId' });
+                    }
+                    showStatus('Database setup complete!', 'info');
+                };
+
+                request.onsuccess = (event) => {
+                    db = event.target.result;
+                    showStatus('Database opened successfully.', 'info');
+                    resolve(db);
+                };
+
+                request.onerror = (event) => {
+                    console.error('IndexedDB error:', event.target.error);
+                    showStatus(`IndexedDB error: ${event.target.error.message}`, 'error');
+                    reject(event.target.error);
+                };
+            });
+        }
+
+        function getAllItemsFromStore(storeName) {
+            return new Promise((resolve, reject) => {
+                const transaction = db.transaction([storeName], 'readonly');
+                const store = transaction.objectStore(storeName);
+                const request = store.getAll();
+
+                request.onsuccess = (event) => {
+                    resolve(event.target.result);
+                };
+
+                request.onerror = (event) => {
+                    reject(event.target.error);
+                };
+            });
+        }
+
+        function deleteItemFromStore(storeName, key) {
+            return new Promise((resolve, reject) => {
+                const transaction = db.transaction([storeName], 'readwrite');
+                const store = transaction.objectStore(storeName);
+                const request = store.delete(key);
+
+                request.onsuccess = () => {
+                    resolve();
+                };
+
+                request.onerror = (event) => {
+                    reject(event.target.error);
+                };
+            });
+        }
+
+        function loadTheme() {
+            const savedTheme = localStorage.getItem(THEME_STORAGE_KEY);
+            if (savedTheme === 'dark') {
+                body.classList.add('dark-theme');
+                themeText.textContent = 'Dark Mode';
+                lightIcon.style.display = 'none';
+                moonIcon.style.display = 'inline-block';
+            } else {
+                body.classList.remove('dark-theme');
+                themeText.textContent = 'Light Mode';
+                lightIcon.style.display = 'inline-block';
+                moonIcon.style.display = 'none';
+            }
+        }
+
+        async function exportProjectAsZip(projectId) {
+            async function getItemFromStoreById(storeName, key) {
+                return new Promise((resolve, reject) => {
+                    const transaction = db.transaction([storeName], 'readonly');
+                    const store = transaction.objectStore(storeName);
+                    const request = store.get(key);
+                    request.onsuccess = (event) => {
+                        resolve(event.target.result);
+                    };
+                    request.onerror = (event) => {
+                        reject(event.target.error);
+                    };
+                });
+            }
+
+            try {
+                const project = await getItemFromStoreById(PROJECTS_STORE_NAME, projectId);
+                if (!project) {
+                    throw new Error('Project not found');
+                }
+
+                const files = await getItemFromStoreById(FILES_STORE_NAME, projectId);
+                if (!files) {
+                    throw new Error('No files found for this project');
+                }
+
+                const zip = new JSZip();
+                zip.file('project.json', JSON.stringify(project, null, 2));
+
+                if (typeof files === 'object' && files.files) {
+                    Object.keys(files.files).forEach((filePath) => {
+                        const content = files.files[filePath];
+                        zip.file(filePath, content);
+                    });
+                }
+
+                const zipBlob = await zip.generateAsync({ type: 'blob' });
+
+                if (window.navigator.msSaveBlob) {
+                    window.navigator.msSaveBlob(zipBlob, `${project.name}.zip`);
+                } else if (window.URL && window.URL.createObjectURL) {
+                    const link = document.createElement('a');
+                    link.href = window.URL.createObjectURL(zipBlob);
+                    link.download = `${project.name}.zip`;
+                    link.click();
+                } else {
+                    showStatus('Your browser does not support file downloading.', 'error');
+                }
+                showStatus('Project exported successfully!', 'success');
+            } catch (error) {
+                console.error('Error exporting project:', error);
+                showStatus(`Failed to export project: ${error.message}`, 'error');
+            }
+        }
+
+        function toggleTheme() {
+            if (body.classList.contains('dark-theme')) {
+                body.classList.remove('dark-theme');
+                localStorage.setItem(THEME_STORAGE_KEY, 'light');
+                themeText.textContent = 'Light Mode';
+                lightIcon.style.display = 'inline-block';
+                moonIcon.style.display = 'none';
+            } else {
+                body.classList.add('dark-theme');
+                localStorage.setItem(THEME_STORAGE_KEY, 'dark');
+                themeText.textContent = 'Dark Mode';
+                lightIcon.style.display = 'none';
+                moonIcon.style.display = 'inline-block';
+            }
+        }
+        themeSwitch.addEventListener('click', toggleTheme);
+
+        function showStatus(message, type = 'info') {
+            statusMessage.style.display = 'flex';
+            statusMessage.className = 'message-area';
+            statusMessage.classList.add(type);
+            
+            let iconClass = 'fas fa-info-circle';
+            if (type === 'error') iconClass = 'fas fa-times-circle';
+            if (type === 'success') iconClass = 'fas fa-check-circle';
+
+            statusMessage.innerHTML = `<i class="${iconClass}"></i> <p>${message}</p>`;
+            setTimeout(() => { hideStatus(); }, 3000);
+        }
+
+        function hideStatus() {
+            statusMessage.style.display = 'none';
+        }
+
+        async function renderProjects() {
+            projectsGrid.innerHTML = `
+                <p style="text-align: center; color: var(--text-secondary); padding: 30px; font-weight: 400;">
+                    <i class="fas fa-sync fa-spin"></i> Loading projects from database...
+                </p>
+            `;
+
+            try {
+                if (!db) {
+                    await openGen1DB();
+                }
+
+                let projects = await getAllItemsFromStore(PROJECTS_STORE_NAME);
+                const sortOrder = localStorage.getItem(PROJECT_SORT_KEY) || 'newest'; // Get sort order
+
+                // Populate open counts and find max for bar width calculation
+                let maxOpenCount = 0;
+                projects = projects.map(project => {
+                    const openCountKey = `gen1_project_open_count_${project.id}`;
+                    const openCount = parseInt(localStorage.getItem(openCountKey) || '0', 10);
+                    if (openCount > maxOpenCount) {
+                        maxOpenCount = openCount;
+                    }
+                    return { ...project, openCount };
+                });
+
+                // Apply sorting based on preference
+                switch (sortOrder) {
+                    case 'newest':
+                        projects.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+                        break;
+                    case 'oldest':
+                        projects.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+                        break;
+                    case 'mostOpened':
+                        projects.sort((a, b) => b.openCount - a.openCount);
+                        break;
+                    case 'leastOpened':
+                        projects.sort((a, b) => a.openCount - b.openCount);
+                        break;
+                    case 'az':
+                        projects.sort((a, b) => a.name.localeCompare(b.name));
+                        break;
+                    case 'za':
+                        projects.sort((a, b) => b.name.localeCompare(a.name));
+                        break;
+                    default:
+                        projects.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)); // Default to newest
+                        break;
+                }
+
+                projectsGrid.innerHTML = '';
+
+                if (projects.length === 0) {
+                    projectsGrid.innerHTML = `
+                        <p style="text-align: center; color: var(--text-secondary); padding: 30px; font-weight: 400;">
+                            No projects found. Tap the <i class="fas fa-plus fa-lg" style="color: var(--accent-main);"></i> button to create your first project.
+                        </p>
+                    `;
+                } else {
+                    projects.forEach((project) => {
+                        const openCount = project.openCount;
+                        const barWidth = maxOpenCount > 0 ? (openCount / maxOpenCount) * 100 : 0;
+
+                        const projectCard = document.createElement('div');
+                        projectCard.classList.add('project-card');
+                        projectCard.dataset.projectId = project.id;
+                        projectCard.innerHTML = `
+                            <h3><i class="fas fa-folder"></i> ${project.name}</h3>
+                            <p>Created: ${new Date(project.createdAt).toLocaleDateString()}</p>
+                            <div class="project-stats">
+                                <span class="stat-label">Opens: <span class="open-count">${openCount}</span></span>
+                                <div class="open-count-bar-container">
+                                    <div class="open-count-bar" style="width: ${barWidth}%;"></div>
+                                </div>
+                            </div>
+                            <div class="card-actions">
+                                <button class="open-btn"><i class="fas fa-edit"></i> Open</button>
+                                <button class="export-btn"><i class="fas fa-download"></i> Export</button>
+                                <button class="delete-btn"><i class="fas fa-trash-alt"></i> Delete</button>
+                            </div>
+                        `;
+
+                        projectCard.querySelector('.export-btn').addEventListener('click', (event) => {
+                            event.stopPropagation();
+                            exportProjectAsZip(project.id);
+                        });
+                        projectCard.querySelector('.open-btn').addEventListener('click', (event) => {
+                            event.stopPropagation();
+                            openProject(project.id);
+                        });
+                        projectCard.querySelector('.delete-btn').addEventListener('click', (event) => {
+                            event.stopPropagation();
+                            deleteProject(project.id);
+                        });
+                        projectCard.addEventListener('click', () => openProject(project.id));
+
+                        projectsGrid.appendChild(projectCard);
+                    });
+                }
+            } catch (error) {
+                console.error('Error rendering projects:', error);
+                projectsGrid.innerHTML = `
+                    <p style="text-align: center; color: var(--error-color); padding: 30px; font-weight: 400;">
+                        <i class="fas fa-exclamation-triangle"></i> Failed to load projects. Please refresh or check console.
+                    </p>
+                `;
+                showStatus(`Failed to load projects: ${error.message}`, 'error');
+            }
+        }
+
+        function openProject(projectId) {
+            const key = `gen1_project_open_count_${projectId}`;
+            let count = parseInt(localStorage.getItem(key) || '0', 10);
+            count++;
+            localStorage.setItem(key, count.toString());
+            localStorage.setItem(CURRENT_PROJECT_ID_LS_KEY, projectId);
+            window.location.href = 'Pe.html';
+        }
+
+        async function deleteProject(projectIdToDelete) {
+            if (confirm(`Are you sure you want to delete this project permanently? This action cannot be undone.`)) {
+                showStatus('Deleting project...', 'info');
+                try {
+                    const transaction = db.transaction([PROJECTS_STORE_NAME, FILES_STORE_NAME], 'readwrite');
+                    const projectsStore = transaction.objectStore(PROJECTS_STORE_NAME);
+                    const filesStore = transaction.objectStore(FILES_STORE_NAME);
+
+                    await Promise.all([
+                        new Promise((resolve, reject) => {
+                            const req1 = projectsStore.delete(projectIdToDelete);
+                            req1.onsuccess = () => resolve();
+                            req1.onerror = (e) => reject(e.target.error);
+                        }),
+                        new Promise((resolve, reject) => {
+                            const req2 = filesStore.delete(projectIdToDelete);
+                            req2.onsuccess = () => resolve();
+                            req2.onerror = (e) => reject(e.target.error);
+                        })
+                    ]);
+                    localStorage.removeItem(`gen1_project_open_count_${projectIdToDelete}`);
+
+                    showStatus('Project deleted successfully!', 'success');
+                    renderProjects();
+                } catch (error) {
+                    console.error('Error deleting project:', error);
+                    showStatus(`Failed to delete project: ${error.message}`, 'error');
+                }
+            }
+        }
+
+        createNewProjectBtn.addEventListener('click', () => {
+            window.location.href = 'Np.html';
+        });
+
+        settingsBtn.addEventListener('click', () => {
+            window.location.href = 'settings.html';
+        });
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            loadTheme();
+            // Open IndexedDB only after Firebase auth is checked/user is present
+            // The renderProjects will be called from the onAuthStateChanged if a user is found.
+        });
+
+        // Initialize IndexedDB and render projects only if user is authenticated.
+        // This ensures data is loaded for the correct user.
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                openGen1DB().then(() => {
+                    renderProjects();
+                });
+            }
+        });
+    </script>
+</body>
+</html>
