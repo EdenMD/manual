@@ -19,15 +19,7 @@
         <edit-config file="app/src/main/AndroidManifest.xml" mode="merge" target="/manifest/application">
             <application android:usesCleartextTraffic="true" />
         </edit-config>
-        <preference name="AndroidWindowSplashScreenAnimatedIcon" value="resources/android/splash/splash-animation.xml" />
-        <!-- Add this icon for Android -->
-        <icon density="mdpi" src="resources/android/icon/mdpi-icon.png" />
-        <icon density="hdpi" src="resources/android/icon/hdpi-icon.png" />
-        <icon density="xhdpi" src="resources/android/icon/xhdpi-icon.png" />
-        <icon density="xxhdpi" src="resources/android/icon/xxhdpi-icon.png" />
-        <icon density="xxxhdpi" src="resources/android/icon/xxxhdpi-icon.png" />
     </platform>
-    <icon src="resources/icon.png" />
     <preference name="BackgroundColor" value="0xFFFFFFFF" />
     <preference name="AndroidWindowSplashScreenBackground" value="#FFFFFF" />
     <preference name="AndroidXEnabled" value="true" />
