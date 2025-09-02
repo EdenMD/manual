@@ -22,9 +22,6 @@ jobs:
     - name: Install Cordova Res CLI
       run: npm install -g cordova-res@0.15.4
 
-    - name: Generate Cordova Resources
-      run: cordova-res android --skip-splash --copy
-
     - name: Set up Java
       uses: actions/setup-java@v4
       with:
