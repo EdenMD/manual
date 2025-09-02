@@ -1,0 +1,39 @@
+<?xml version='1.0' encoding='utf-8'?>
+<widget id="com.example.mypwaapp" version="1.0.0" xmlns="http://www.w3.org/2000/svg" xmlns:android="http://schemas.android.com/apk/res/android" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+    <name>Xbuilder</name>
+    <description>A sample Apache Cordova application.</description>
+    <author email="dev@cordova.apache.org" href="https://cordova.apache.org">
+        Apache Cordova Team
+    </author>
+    <content src="https://edenxbuilder-edenmd.wasmer.app" />
+    <allow-intent href="http://*/*" />
+    <allow-intent href="https://*/*" />
+    <allow-intent href="tel:*" />
+    <allow-intent href="sms:*" />
+    <allow-intent href="mailto:*" />
+    <allow-intent href="geo:*" />
+    <platform name="android">
+        <preference name="android-targetSdkVersion" value="35" />
+        <preference name="android-minSdkVersion" value="21" />
+        <allow-intent href="market:*" />
+        <edit-config file="app/src/main/AndroidManifest.xml" mode="merge" target="/manifest/application">
+            <application android:usesCleartextTraffic="true" />
+        </edit-config>
+        <preference name="AndroidWindowSplashScreenAnimatedIcon" value="resources/android/splash/splash-animation.xml" />
+        <!-- Add this icon for Android -->
+        <icon density="mdpi" src="resources/android/icon/mdpi-icon.png" />
+        <icon density="hdpi" src="resources/android/icon/hdpi-icon.png" />
+        <icon density="xhdpi" src="resources/android/icon/xhdpi-icon.png" />
+        <icon density="xxhdpi" src="resources/android/icon/xxhdpi-icon.png" />
+        <icon density="xxxhdpi" src="resources/android/icon/xxxhdpi-icon.png" />
+    </platform>
+    <icon src="resources/icon.png" />
+    <preference name="BackgroundColor" value="0xFFFFFFFF" />
+    <preference name="AndroidWindowSplashScreenBackground" value="#FFFFFF" />
+    <preference name="AndroidXEnabled" value="true" />
+    <preference name="GradlePluginKotlinEnabled" value="true" />
+    <preference name="GradlePluginKotlinVersion" value="1.8.20" />
+    <!-- AdMob Plugin and App ID -->
+    <plugin name="admob-plus-cordova" spec="^2.0.0" />
+    <preference name="APP_ID_ANDROID" value="ca-app-pub-3940256099942544~3347511713" />
+</widget>
